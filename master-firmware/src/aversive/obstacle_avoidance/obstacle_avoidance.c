@@ -143,6 +143,21 @@ poly_t *oa_new_poly(int size)
     return &oa.polys[oa.cur_poly_idx++];
 }
 
+void oa_add_poly_obstacle(circle_t circle, int samples, float angle_offset)
+{
+    discretize_circle(oa_new_poly(samples), circle, samples, angle_offset);
+}
+
+void oa_new_poly_(int size, poly_t * poly)
+{
+    *poly = *oa_new_poly(size);
+}
+
+void oa_get_poly(int i, poly_t* poly)
+{
+    *poly = oa.polys[i];
+}
+
 int oa_segment_intersect_obstacle(point_t p1, point_t p2)
 {
     int i;
@@ -174,6 +189,12 @@ int oa_get_path(point_t **path)
     *path = oa.res;
     return oa.res_len;
 }
+
+void oa_get_point(point_t *point, int index)
+{
+    *point = oa.res[index];
+}
+
 
 void oa_dump(void)
 {

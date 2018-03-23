@@ -62,6 +62,7 @@ extern "C" {
 #include <math/geometry/vect_base.h>
 #include <math/geometry/lines.h>
 #include <math/geometry/circles.h>
+#include <math/geometry/discrete_circles.h>
 
 #define MAX_POLY 20        /**< The maximal number of obstacles in the area. */
 #define MAX_PTS 500         /**< The maximal number of polygon vertices. */
@@ -159,6 +160,7 @@ int8_t oa_process(void);
  * @returns An array of points, giving the path from start to end.
  */
 int oa_get_path(point_t **path);
+void oa_get_point(point_t *point, int index);
 
 
 /** Checks if a segment is intersecting any obstacle.
