@@ -30,7 +30,7 @@ typedef struct {
 void TCS3472_init(TCS3472_t *dev, I2CDriver *i2c);
 void TCS3472_configure(TCS3472_t *dev, uint8_t gain, uint8_t integration_time);
 bool TCS3472_ping(TCS3472_t *dev);
-bool TCS3472_read_color(TCS3472_t *dev, uint16_t crgb[4]);
+bool TCS3472_read_color(TCS3472_t *dev, uint16_t *rgbc);
 
 #ifdef __cplusplus
 }

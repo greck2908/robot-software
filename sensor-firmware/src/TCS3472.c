@@ -58,7 +58,7 @@ void TCS3472_init(TCS3472_t *dev, I2CDriver *i2c)
 
 void TCS3472_configure(TCS3472_t *dev, uint8_t gain, uint8_t integration_time)
 {
-    TCS3472_write_reg(dev, TCS3472_REG_ENABLE, TCS3472_ENABLE_PON);
+    TCS3472_write_reg(dev, TCS3472_REG_ENABLE, TCS3472_ENABLE_PON | TCS3472_ENABLE_AEN);
     TCS3472_write_reg(dev, TCS3472_REG_ATIME, integration_time);
     TCS3472_write_reg(dev, TCS3472_REG_CONTROL, gain);
     TCS3472_write_reg(dev, TCS3472_REG_WTIME, 0xFF); // minimal wait time
@@ -75,20 +75,8 @@ bool TCS3472_ping(TCS3472_t *dev)
     }
 }
 
-// returns true if data valid
-bool TCS3472_read_color(TCS3472_t *dev, uint16_t crgb[4])
+bool TCS3472_read_color(TCS3472_t *dev, uint16_t *rgbc)
 {
-    // start ADC
-    TCS3472_write_reg(dev, TCS3472_REG_ENABLE, TCS3472_ENABLE_PON | TCS3472_ENABLE_AEN);
-
-    unsigned timeout_ms = 1000;
-    while ((TCS3472_read_reg(dev, TCS3472_REG_STATUS) & 1) == 0) {
-        chThdSleepMilliseconds(1);
-        if (--timeout_ms == 0) {
-            return false;
-        }
-    }
-
     uint8_t txbuf[1] = {TCS3472_REG_CDATAL | TCS3472_CMD_AUTO_INC};
     uint8_t rxbuf[8];
 
@@ -96,13 +84,10 @@ bool TCS3472_read_color(TCS3472_t *dev, uint16_t crgb[4])
         return false;
     }
 
-    crgb[0] = rxbuf[0] | ((uint16_t)rxbuf[1] << 8);
-    crgb[1] = rxbuf[2] | ((uint16_t)rxbuf[3] << 8);
-    crgb[2] = rxbuf[4] | ((uint16_t)rxbuf[5] << 8);
-    crgb[3] = rxbuf[6] | ((uint16_t)rxbuf[7] << 8);
-
-    // stop ADC
-    TCS3472_write_reg(dev, TCS3472_REG_ENABLE, TCS3472_ENABLE_PON);
+    rgbc[3] = rxbuf[0] | ((uint16_t)rxbuf[1] << 8);
+    rgbc[0] = rxbuf[2] | ((uint16_t)rxbuf[3] << 8);
+    rgbc[1] = rxbuf[4] | ((uint16_t)rxbuf[5] << 8);
+    rgbc[2] = rxbuf[6] | ((uint16_t)rxbuf[7] << 8);
 
     return true;
 }
