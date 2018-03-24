@@ -83,7 +83,7 @@ void color_sensor_init(void)
         NOTICE("TCS3472 ping ERROR");
     }
 
-    TCS3472_configure(&color_sensor);
+    TCS3472_configure(&color_sensor, TCS34721_GAIN_16X, TCS3472_INTEGRATION_TIME_101_MS);
 }
 
 THD_FUNCTION(blinker, arg)
