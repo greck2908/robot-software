@@ -29,6 +29,7 @@
 #include "strategy/actions.h"
 #include "strategy/goals.h"
 #include "strategy/state.h"
+#include "strategy/breakpoints.h"
 
 
 static enum strat_color_t wait_for_color_selection(void);
@@ -572,6 +573,7 @@ void strategy_play_game(void *p)
     messagebus_topic_init(&score_topic, &score_lock,
                           &score_condvar, &score_value, sizeof(int));
     messagebus_advertise_topic(&bus, &score_topic, "/score");
+    strategy_breakpoints_init();
 
     NOTICE("Strategy is ready, waiting for autopositioning signal");
 

@@ -37,6 +37,7 @@
 #include <trace/trace.h>
 #include "pca9685_pwm.h"
 #include "lever/lever_module.h"
+#include "strategy/breakpoints.h"
 
 const ShellCommand commands[];
 
@@ -314,6 +315,11 @@ static void cmd_config_set(BaseSequentialStream *chp, int argc, char **argv)
             chprintf(chp, "%s: unknown type %d\r\n", param->id, param->type);
             break;
     }
+}
+
+static void cmd_strat_breakpoints(BaseSequentialStream *chp, int argc, char **argv)
+{
+    strategy_breakpoints_set_enabled(true);
 }
 
 
@@ -1386,6 +1392,7 @@ const ShellCommand commands[] = {
     {"crashme", cmd_crashme},
     {"config_tree", cmd_config_tree},
     {"config_set", cmd_config_set},
+    {"break", cmd_strat_breakpoints},
     {"encoders", cmd_encoders},
     {"forward", cmd_traj_forward},
     {"hand", cmd_hand},
