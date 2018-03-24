@@ -73,8 +73,13 @@ void tof_distance_init(void)
 
 TCS3472_t color_sensor;
 
+#define LED_WHITE PAL_LINE(GPIOA, 4)
+
 void color_sensor_init(void)
 {
+    palSetLineMode(LED_WHITE, PAL_STM32_MODE_OUTPUT);
+    palSetLine(LED_WHITE); // enable light
+
     TCS3472_init(&color_sensor, &I2CD2);
 
     if (TCS3472_ping(&color_sensor)) {
