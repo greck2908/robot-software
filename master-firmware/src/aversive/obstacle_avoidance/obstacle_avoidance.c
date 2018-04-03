@@ -50,6 +50,16 @@ static struct obstacle_avoidance oa;
 static void __oa_start_end_points(int32_t st_x, int32_t st_y,
                                   int32_t en_x, int32_t en_y);
 
+int oa_get_num_rays(void)
+{
+    return oa.ray_n;
+}
+void oa_get_ray(int i, point_t* start, point_t* end)
+{
+    *start = oa.polys[oa.rays[4*i]].pts[oa.rays[4*i + 1]];
+    *end = oa.polys[oa.rays[4*i + 2]].pts[oa.rays[4*i + 3]];
+}
+
 /* reset oa without reseting points coord */
 void oa_reset(void)
 {

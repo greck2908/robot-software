@@ -89,9 +89,24 @@ class Plot():
         self.ax.plot([start[0]], [start[1]], marker='o', color='red')
         self.ax.plot([goal[0]], [goal[1]], marker='o', color='green')
 
+    def plot_ray(self, start, end, color='black'):
+        self.ax.plot([start[0], end[0]], [start[1], end[1]], color=color)
+
     def save(self, filename):
         self.fig.savefig(filename, dpi=300)
         plt.close(self.fig)
+
+def read_rays():
+    rays = []
+
+    for i in range(liboa.oa_get_num_rays() / 4):
+        start = point_t()
+        end = point_t()
+        w = c_int()
+        liboa.oa_get_ray(c_int(i), pointer(start), pointer(end), pointer(w))
+        rays.append([[start.x, start.y], [end.x, end.y], int(w.value)])
+
+    return rays
 
 if __name__ == '__main__':
     robot_size = 250
@@ -108,7 +123,10 @@ if __name__ == '__main__':
     for point in path:
         print('Point {} {}'.format(point[0], point[1]))
 
+
     plot = Plot()
     plot.plot_table(bbox)
     plot.plot_path(path, path[0], path[-1])
+    for i, ray in enumerate(read_rays()):
+        plot.plot_ray(ray[0], ray[1])
     plot.save('test.png')

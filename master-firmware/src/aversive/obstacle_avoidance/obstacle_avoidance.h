@@ -116,6 +116,9 @@ struct obstacle_avoidance {
     int res_len; /** Path length */
 };
 
+int oa_get_num_rays(void);
+void oa_get_ray(int i, point_t* start, point_t* end);
+
 /** Reset obstacle avoidance without cleaning points */
 void oa_reset(void);
 
