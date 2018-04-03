@@ -98,22 +98,11 @@ if __name__ == '__main__':
     bbox = [int(robot_size/2), int(robot_size/2), int(3000-robot_size/2), int(2000-robot_size/2)]
     initialize_obstacle_avoidance(bbox)
 
-    add_obstacle_from_points([[ 894 - robot_size/2, 1750 - robot_size/2],
-                              [2106 + robot_size/2, 1750 - robot_size/2],
-                              [2106 + robot_size/2, 2000 + robot_size/2],
-                              [ 894 - robot_size/2, 2000 + robot_size/2]])
-    add_cubes_obstacle(850, 540, robot_size)
-    add_cubes_obstacle(300, 1190, robot_size)
-    add_cubes_obstacle(1100, 1500, robot_size)
-    add_cubes_obstacle(2150, 540, robot_size)
-    add_cubes_obstacle(2700, 1190, robot_size)
-    add_cubes_obstacle(1900, 1500, robot_size)
+    liboa.mymap_init(c_int(robot_size))
 
-    add_obstacle(Circle(x=2200, y=1400, radius=300), 12, offset=0)
-
-    start = (200, 200)
-    goal = (2870, 1870)
-    path = plan(start, goal)
+    path = plan((200, 200), (150, 1850))
+    path = plan((200, 200), (1010, 700))
+    path = plan((1010, 700), (200, 200))
 
     print('Found path with {} points'.format(len(path)))
     for point in path:
@@ -121,5 +110,5 @@ if __name__ == '__main__':
 
     plot = Plot()
     plot.plot_table(bbox)
-    plot.plot_path(path, start, goal)
+    plot.plot_path(path, path[0], path[-1])
     plot.save('test.png')

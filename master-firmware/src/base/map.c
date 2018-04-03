@@ -1,19 +1,22 @@
 #include "math/geometry/discrete_circles.h"
 #include "robot_helpers/math_helpers.h"
-#include "base_controller.h"
 #include "map.h"
 
 #define TABLE_POINT_X(x) math_clamp_value(x, 0, MAP_SIZE_X_MM)
 #define TABLE_POINT_Y(y) math_clamp_value(y, 0, MAP_SIZE_Y_MM)
 
-static void map_lock(mutex_t *lock) { chMtxLock(lock); }
-static void map_unlock(mutex_t *lock) { chMtxUnlock(lock); }
+static void map_lock(mutex_t *lock) {
+    // chMtxLock(lock);
+}
+static void map_unlock(mutex_t *lock) {
+    // chMtxUnlock(lock);
+}
 
 void map_init(struct _map* map, int robot_size)
 {
     // Initialise obstacle avoidance state
     oa_init();
-    chMtxObjectInit(&map->lock);
+    // chMtxObjectInit(&map->lock);
 
     /* Define table borders */
     polygon_set_boundingbox(robot_size/2, robot_size/2,
@@ -35,6 +38,12 @@ void map_init(struct _map* map, int robot_size)
         map->blocks_cube[i] = oa_new_poly(MAP_NUM_BLOCKS_CUBE_EDGES);
         map_set_cubes_obstacle(map, i, 0, 0, 0);
     }
+    map_set_cubes_obstacle(map, 0, 850, 540, robot_size);
+    map_set_cubes_obstacle(map, 1, 300, 1190, robot_size);
+    map_set_cubes_obstacle(map, 2, 1100, 1500, robot_size);
+    map_set_cubes_obstacle(map, 3, 1900, 1500, robot_size);
+    map_set_cubes_obstacle(map, 4, 2700, 1190, robot_size);
+    map_set_cubes_obstacle(map, 5, 2150, 540, robot_size);
 
     /* Setup water dispenser obstacles */
     for (int i = 0; i < MAP_NUM_WATER_DISPENSER; i++) {

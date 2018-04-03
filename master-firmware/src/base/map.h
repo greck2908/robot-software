@@ -40,6 +40,9 @@ struct _map {
  */
 void map_init(struct _map *map, int robot_size);
 
+static struct _map mymap;
+void mymap_init(int robot_size) { map_init(&mymap, robot_size); }
+
 /** Set the position of the opponent identified by its index
  */
 void map_set_opponent_obstacle(struct _map *map, int index, int32_t x,

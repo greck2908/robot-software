@@ -3,6 +3,8 @@ cmake_minimum_required(VERSION 3.0)
 project(obstacle_avoidance)
 
 include_directories(.)
+include_directories(${CMAKE_SOURCE_DIR}/../)
+include_directories(${CMAKE_SOURCE_DIR}/../../tests/)
 include_directories(${CMAKE_SOURCE_DIR}/../../../lib/)
 
 SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x -Wall")
@@ -18,6 +20,8 @@ add_library(
     math/geometry/polygon.c
     math/geometry/vect_base.c
     math/vect2/vect2.c
+    ${CMAKE_SOURCE_DIR}/../robot_helpers/math_helpers.c
+    ${CMAKE_SOURCE_DIR}/../base/map.c
     ${CMAKE_SOURCE_DIR}/../../../lib/error/error.c
     )
 
