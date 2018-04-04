@@ -50,6 +50,17 @@ static struct obstacle_avoidance oa;
 static void __oa_start_end_points(int32_t st_x, int32_t st_y,
                                   int32_t en_x, int32_t en_y);
 
+int oa_get_num_pts(void)
+{
+    return oa.cur_pt_idx;
+}
+void oa_get_pt(int i, point_t* point, int* valid, int* weight)
+{
+    *point = oa.points[i];
+    *valid = oa.valid[i];
+    *weight = oa.pweight[i];
+}
+
 int oa_get_num_rays(void)
 {
     return oa.ray_n;
