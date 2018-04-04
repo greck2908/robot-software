@@ -34,7 +34,6 @@ Circle = namedtuple("Circle", ["x", "y", "radius"])
 def initialize_obstacle_avoidance(bbox):
     liboa.polygon_set_boundingbox(c_int(bbox[0]), c_int(bbox[1]), c_int(bbox[2]), c_int(bbox[3]))
     liboa.oa_init()
-    liboa.oa_reset()
 
 def add_obstacle(circle, samples, offset=0):
     res = liboa.oa_add_poly_obstacle(circle_t(circle.x, circle.y, circle.radius), c_int(samples), c_float(offset))
@@ -51,6 +50,7 @@ def add_cubes_obstacle(x, y, robot_size):
     add_obstacle(Circle(x=x, y=y, radius=90+robot_size/2), 8, pi/8)
 
 def plan(start, end):
+    liboa.oa_reset()
     liboa.oa_start_end_points(c_int(start[0]), c_int(start[1]), c_int(end[0]), c_int(end[1]))
     res = liboa.oa_process()
     if res < 0: return []
