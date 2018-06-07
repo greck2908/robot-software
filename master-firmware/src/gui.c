@@ -118,8 +118,13 @@ static void gui_thread(void *p)
             static char buffer[64];
             float hand_sens;
             if (messagebus_topic_read(hand_distance_topic, &hand_sens, sizeof(hand_sens))) {
-                sprintf(buffer, "Distance[mm]: %.1f", hand_sens*1000);
+                if(hand_sens>0){
+                sprintf(buffer, "Distance: %.0f [mm]", hand_sens*1000);
                 gwinSetText(score_label, buffer, TRUE);
+                }else{
+                sprintf(buffer, "Je vois rien colinet...");
+                gwinSetText(score_label, buffer, TRUE);
+                }
             }
         }
     }

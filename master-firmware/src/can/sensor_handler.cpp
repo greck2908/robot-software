@@ -16,6 +16,8 @@ static void sensor_distance_cb(const uavcan::ReceivedDataStructure<cvra::sensor:
         float dist = (float)msg.distance_mm / 1000.0f;
         messagebus_topic_publish(&hand_distance_topic, &dist, sizeof(dist));
     } else {
+        float dist = -0.001;
+        messagebus_topic_publish(&hand_distance_topic, &dist, sizeof(dist));
         DEBUG("Hand distance measurement error: %d", (int)msg.status);
     }
 }
