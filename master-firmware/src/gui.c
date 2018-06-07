@@ -106,7 +106,7 @@ static void gui_thread(void *p)
     WARNING("GUI init done");
 
     chThdSleepMilliseconds(1000);
-    messagebus_topic_t *score_topic = messagebus_find_topic_blocking(&bus, "/score");
+    messagebus_topic_t* hand_distance_topic = messagebus_find_topic_blocking(&bus, "/hand_distance");
     while (true) {
         char *msg;
         msg_t res = chMBFetch(&msg_mailbox, (msg_t *)&msg, MS2ST(500));
@@ -116,9 +116,9 @@ static void gui_thread(void *p)
             chPoolFree(&msg_pool, msg);
         } else {
             static char buffer[64];
-            int score;
-            if (messagebus_topic_read(score_topic, &score, sizeof(score))) {
-                sprintf(buffer, "Score: %d", score);
+            float hand_sens;
+            if (messagebus_topic_read(hand_distance_topic, &hand_sens, sizeof(hand_sens))) {
+                sprintf(buffer, "Distance[mm]: %.1f", hand_sens*1000);
                 gwinSetText(score_label, buffer, TRUE);
             }
         }
