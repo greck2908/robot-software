@@ -57,8 +57,8 @@ static void gui_thread(void *p)
         gwinWidgetClearInit(&wi);
         memset(&wi, 0, sizeof(wi));
         wi.g.show = TRUE;
-        wi.g.x = 45;
-        wi.g.y = 0;
+        wi.g.x = 0;
+        wi.g.y = 45;
         wi.g.width = gdispGetWidth();
         wi.g.height = 40;
         sensor_label = gwinLabelCreate(0, &wi);
