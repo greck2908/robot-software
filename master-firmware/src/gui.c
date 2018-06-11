@@ -41,6 +41,7 @@ static void gui_thread(void *p)
     }
     {
         GWidgetInit wi;
+        gwinWidgetClearInit(&wi);
         memset(&wi, 0, sizeof(wi));
         wi.g.show = TRUE;
         wi.g.x = 0;
@@ -56,13 +57,13 @@ static void gui_thread(void *p)
         gwinWidgetClearInit(&wi);
         memset(&wi, 0, sizeof(wi));
         wi.g.show = TRUE;
-        wi.g.x = 40;
+        wi.g.x = 45;
         wi.g.y = 0;
         wi.g.width = gdispGetWidth();
         wi.g.height = 40;
         sensor_label = gwinLabelCreate(0, &wi);
         gwinSetFont(sensor_label, gdispOpenFont("DejaVuSans32"));
-        gwinSetText(sensor_label, "Score 36", TRUE);
+        gwinSetText(sensor_label, "Hand sensor", TRUE);
     }
 /*
     {
@@ -120,6 +121,22 @@ static void gui_thread(void *p)
     WARNING("GUI init done");
 
     chThdSleepMilliseconds(1000);
+    messagebus_topic_t *score_topic = messagebus_find_topic_blocking(&bus, "/score");
+    while (true) {
+        static char buffer[64];
+        int score;
+        if (messagebus_topic_read(score_topic, &score, sizeof(score))) {
+            sprintf(buffer, "Score: %d", score);
+            gwinSetText(score_label, buffer, TRUE);
+        }
+
+        char *msg;
+        msg_t res = chMBFetch(&msg_mailbox, (msg_t *)&msg, MS2ST(500));
+        if (res == MSG_OK) {
+            gwinPrintf(console, msg);
+            chPoolFree(&msg_pool, msg);
+        }
+}
     messagebus_topic_t* hand_distance_topic = messagebus_find_topic_blocking(&bus, "/hand_distance");
     while (true) {
         char *msg;
@@ -134,10 +151,10 @@ static void gui_thread(void *p)
             if (messagebus_topic_read(hand_distance_topic, &hand_sens, sizeof(hand_sens))) {
                 if(hand_sens>0){
                 sprintf(buffer, "Distance: %.0f [mm]", hand_sens*1000);
-                gwinSetText(score_label, buffer, TRUE);
+                gwinSetText(sensor_label, buffer, TRUE);
                 }else{
                 sprintf(buffer, "Je vois rien colinet...");
-                gwinSetText(score_label, buffer, TRUE);
+                gwinSetText(sensor_label, buffer, TRUE);
                 }
             }
         }
