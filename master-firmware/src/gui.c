@@ -7,10 +7,11 @@
 #include "main.h"
 
 static GHandle score_label;
+static GHandle sensor_label;
 static GHandle console;
 static GHandle   ghButton1;
 static GHandle   ghCheckbox1;
-static GHandle   ghSlider1;
+static GHandle   ghSlider1; 
 static bool init_done = false;
 
 #define MSG_MAX_LENGTH 128
@@ -50,7 +51,20 @@ static void gui_thread(void *p)
         gwinSetFont(score_label, gdispOpenFont("DejaVuSans32"));
         gwinSetText(score_label, "Score 42", TRUE);
     }
-
+    {
+        GWidgetInit wi;
+        gwinWidgetClearInit(&wi);
+        memset(&wi, 0, sizeof(wi));
+        wi.g.show = TRUE;
+        wi.g.x = 40;
+        wi.g.y = 0;
+        wi.g.width = gdispGetWidth();
+        wi.g.height = 40;
+        sensor_label = gwinLabelCreate(0, &wi);
+        gwinSetFont(sensor_label, gdispOpenFont("DejaVuSans32"));
+        gwinSetText(sensor_label, "Score 36", TRUE);
+    }
+/*
     {
 	    GWidgetInit	wi;
 
@@ -96,7 +110,7 @@ static void gui_thread(void *p)
         wi.text = "Test";
 	    ghSlider1 = gwinSliderCreate(0, &wi);
     }
-
+*/
     gwinSetColor(console, White);
     gwinSetBgColor(console, Black);
     gwinClear(console);
