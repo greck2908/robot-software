@@ -72,43 +72,47 @@ static void gui_thread(void *p)
     init_done = true;
 
     WARNING("GUI init done");
-    
+
     chThdSleepMilliseconds(1000);
-   /* messagebus_topic_t *score_topic = messagebus_find_topic_blocking(&bus, "/score");
-    while (true) {
-        static char buffer[64];
-        int score;
-        if (messagebus_topic_read(score_topic, &score, sizeof(score))) {
-            sprintf(buffer, "Score: %d", score);
-            gwinSetText(score_label, buffer, TRUE);
-        }
-
-        char *msg;
-        msg_t res = chMBFetch(&msg_mailbox, (msg_t *)&msg, MS2ST(500));
-        if (res == MSG_OK) {
-            gwinPrintf(console, msg);
-            chPoolFree(&msg_pool, msg);
-        }
-}*/
-    messagebus_topic_t* hand_distance_topic = messagebus_find_topic_blocking(&bus, "/hand_distance");
-    while (true) {
+    while (true)
+    {
         char *msg;
         msg_t res = chMBFetch(&msg_mailbox, (msg_t *)&msg, MS2ST(500));
 
-        if (res == MSG_OK) {
+        if (res == MSG_OK)
+        {
             gwinPrintf(console, msg);
             chPoolFree(&msg_pool, msg);
-        } else {
+        }
+        else
+        {
             static char buffer[64];
             float hand_sens;
-            if (messagebus_topic_read(hand_distance_topic, &hand_sens, sizeof(hand_sens))) {
-                if(hand_sens>0){
-                sprintf(buffer, "Distance: %.0f [mm]", hand_sens*1000);
-                gwinSetText(sensor_label, buffer, TRUE);
-                }else{
-                sprintf(buffer, "Je vois rien colinet...");
-                gwinSetText(sensor_label, buffer, TRUE);
+            messagebus_topic_t *hand_distance_topic = messagebus_find_topic(&bus, "/hand_distance");
+            if (hand_distance_topic && messagebus_topic_read(hand_distance_topic, &hand_sens, sizeof(hand_sens)))
+            {
+                if (hand_sens > 0)
+                {
+                    sprintf(buffer, "Distance: %.0f [mm]", hand_sens * 1000);
+                    gwinSetText(sensor_label, buffer, TRUE);
                 }
+                else
+                {
+                    sprintf(buffer, "I don't see anything Coco");
+                    gwinSetText(sensor_label, buffer, TRUE);
+                }
+            }
+            int score = 0;
+            messagebus_topic_t *score_topic = messagebus_find_topic(&bus, "/score");
+            if (score_topic && messagebus_topic_read(score_topic, &score, sizeof(score)))
+            {
+                sprintf(buffer, "Score: %d", score);
+                gwinSetText(score_label, buffer, TRUE);
+            }
+            else
+            {
+                sprintf(buffer, "Yeah Yeah");
+                gwinSetText(score_label, buffer, TRUE);
             }
         }
     }
