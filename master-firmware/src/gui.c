@@ -34,8 +34,7 @@ static void gui_thread(void *p)
     gdispClear(Black);
     {
         GWindowInit wi;
-        gwinWidgetClearInit(&wi);
-        memset(&wi, 0, sizeof(wi));
+        gwinClearInit(&wi);
         wi.show = TRUE;
         wi.x = 0;
         wi.y = 200;
@@ -46,7 +45,6 @@ static void gui_thread(void *p)
     {
         GWidgetInit wi;
         gwinWidgetClearInit(&wi);
-        memset(&wi, 0, sizeof(wi));
         wi.g.show = TRUE;
         wi.g.x = 0;
         wi.g.y = 0;
@@ -59,7 +57,6 @@ static void gui_thread(void *p)
     {
         GWidgetInit wi;
         gwinWidgetClearInit(&wi);
-        memset(&wi, 0, sizeof(wi));
         wi.g.show = TRUE;
         wi.g.x = 0;
         wi.g.y = 45;
@@ -72,7 +69,6 @@ static void gui_thread(void *p)
     {
         GWidgetInit wi;
         gwinWidgetClearInit(&wi);
-        memset(&wi, 0, sizeof(wi));
         wi.g.show = TRUE;
         wi.g.x = 0;
         wi.g.y = 90;
@@ -85,7 +81,6 @@ static void gui_thread(void *p)
     {
         GWidgetInit wi;
         gwinWidgetClearInit(&wi);
-        memset(&wi, 0, sizeof(wi));
         wi.g.show = TRUE;
         wi.g.x = 0;
         wi.g.y = 125;
@@ -98,7 +93,6 @@ static void gui_thread(void *p)
     {
         GWidgetInit wi;
         gwinWidgetClearInit(&wi);
-        memset(&wi, 0, sizeof(wi));
         wi.g.show = TRUE;
         wi.g.x = 0;
         wi.g.y = 160;
