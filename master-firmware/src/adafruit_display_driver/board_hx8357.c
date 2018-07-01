@@ -14,9 +14,12 @@
 void hx8357_init_board(void *g)
 {
     (void) g;
+    // SPI4 on APB2 @ 84MHz
     static SPIConfig spi_cfg = {
         .end_cb = NULL,
-        .cr1 = SPI_CR1_BR_2,
+        // .cr1 = SPI_CR1_BR_1 | SPI_CR1_BR_0, // div 16, 5.6 MHz
+        // .cr1 = SPI_CR1_BR_1, // div 8, 10.5 MHz
+        .cr1 = SPI_CR1_BR_0, // div 4, 21 MHz
     };
     spiStart(&LCD_SPID, &spi_cfg);
 }
