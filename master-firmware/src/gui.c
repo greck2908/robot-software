@@ -125,6 +125,19 @@ static void gui_thread(void *p)
         else
         {
             static char buffer[64];
+
+            int score = 0;
+            messagebus_topic_t *score_topic = messagebus_find_topic(&bus, "/score");
+            if (score_topic && messagebus_topic_read(score_topic, &score, sizeof(score)))
+            {
+                sprintf(buffer, "Score: %d", score);
+            }
+            else
+            {
+                sprintf(buffer, "Pas de score");
+            }
+            gwinSetText(score_label, buffer, TRUE);
+
             float hand_sens;
             messagebus_topic_t *hand_distance_topic = messagebus_find_topic(&bus, "/hand_distance");
             if (hand_distance_topic && messagebus_topic_read(hand_distance_topic, &hand_sens, sizeof(hand_sens)))
@@ -132,36 +145,25 @@ static void gui_thread(void *p)
                 if (hand_sens > 0)
                 {
                     sprintf(buffer, "Distance: %.0f [mm]", hand_sens * 1000);
-                    gwinSetText(sensor_label, buffer, TRUE);
                 }
                 else
                 {
                     sprintf(buffer, "I don't see anything Coco");
-                    gwinSetText(sensor_label, buffer, TRUE);
                 }
+                gwinSetText(sensor_label, buffer, TRUE);
             }
-            int score = 0;
-            messagebus_topic_t *score_topic = messagebus_find_topic(&bus, "/score");
-            if (score_topic && messagebus_topic_read(score_topic, &score, sizeof(score)))
-            {
-                sprintf(buffer, "Score: %d", score);
-                gwinSetText(score_label, buffer, TRUE);
-            }
-            else
-            {
-                sprintf(buffer, "Pas de score");
-                gwinSetText(score_label, buffer, TRUE);
-            }
-            if (1)
-            {
-                robot_position_t pos = get_robot_position();
-                sprintf(buffer, "x: %d mm  y: %d mm  a: %d deg", pos.x, pos.y, pos.a);
-                gwinSetText(x_label, buffer, TRUE);
-                sprintf(buffer, "y: %d mm", pos.y);
-                gwinSetText(y_label, buffer, TRUE);
-                sprintf(buffer, "a: %d deg", pos.a);
-                gwinSetText(a_label, buffer, TRUE);
-            }
+
+            robot_position_t pos = get_robot_position();
+            sprintf(buffer, "pos: %dx %dy %d<", pos.x, pos.y, pos.a);
+            gwinSetText(x_label, buffer, TRUE);
+
+            sprintf(buffer, "y: %d mm", pos.y);
+            gwinSetText(y_label, buffer, TRUE);
+
+            sprintf(buffer, "a: %d deg", pos.a);
+            gwinSetText(a_label, buffer, TRUE);
+
+            chThdSleepMilliseconds(300);
         }
     }
 }
